@@ -178,6 +178,25 @@
                     }
                 }
 
+                //Check for Lat/Long values - import if present
+                if (ImportColumns.Contains("Latitude"))
+                {
+                    var lat = 0.0;
+                    if(double.TryParse(row.Field<string>("Latitude"), out lat))
+                    {
+                        newLoc.Latitude = lat;                        
+                    }
+                }
+
+                if (ImportColumns.Contains("Longitude"))
+                {
+                    var lon = 0.0;
+                    if (double.TryParse(row.Field<string>("Longitude"), out lon))
+                    {
+                        newLoc.Longitude = lon;                        
+                    }
+                }
+
                 // SAVE properties of new location to db
                 try
                 {
@@ -191,20 +210,6 @@
                     Msg.AppendLine("There was a problem saving the new location data.");
                 }
 
-                //Check for Lat/Long values - import if present
-                if (ImportColumns.Contains("Latitude"))
-                {
-                    int convertedInt = 0;
-                    Int32.TryParse(row.Field<string>("Latitude"), out convertedInt);
-                    newLoc.Latitude = convertedInt;
-                }
-
-                if (ImportColumns.Contains("Longitude"))
-                {
-                    int convertedInt = 0;
-                    Int32.TryParse(row.Field<string>("Longitude"), out convertedInt);
-                    newLoc.Longitude = convertedInt;
-                }
 
                 //If Lat/Long are both 0... attempt geocoding
                 if (newLoc.Latitude == 0 && newLoc.Longitude == 0)
